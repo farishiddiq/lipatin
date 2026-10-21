@@ -1,0 +1,188 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/*
+ * Palet Lipatin: krem F0E7D6, sage 9DBDB8, merah api EA2E00.
+ * Skala stone/orange Tailwind dipetakan ulang ke palet ini supaya seluruh aplikasi
+ * (landing, galeri, Studio) memakai bahasa visual yang sama.
+ */
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  --color-stone-50: #faf6ef;
+  --color-stone-100: #f0e7d6;
+  --color-stone-200: #e5d9c2;
+  --color-stone-300: #d3c4aa;
+  --color-stone-400: #9c8e78;
+  --color-stone-500: #6e6252;
+  --color-stone-600: #574c3f;
+  --color-stone-700: #463d33;
+  --color-stone-800: #2f2923;
+  --color-stone-900: #1f1a17;
+  --color-stone-950: #14110e;
+
+  --color-orange-50: #fff1ec;
+  --color-orange-100: #ffddd1;
+  --color-orange-200: #ffb9a3;
+  --color-orange-300: #ff8e6c;
+  --color-orange-400: #f75c33;
+  --color-orange-500: #ea2e00;
+  --color-orange-600: #d42900;
+  --color-orange-700: #b32300;
+  --color-orange-800: #8c1c00;
+  --color-orange-900: #661500;
+  --color-orange-950: #3d0c00;
+
+  --color-sage-50: #f1f6f5;
+  --color-sage-100: #ddeae7;
+  --color-sage-200: #c2d8d4;
+  --color-sage-300: #9dbdb8;
+  --color-sage-400: #7fa59f;
+  --color-sage-500: #5f8a84;
+  --color-sage-600: #4a6f6a;
+  --color-sage-700: #3a5753;
+  --color-sage-800: #2b403d;
+  --color-sage-900: #1d2b29;
+
+  --color-cream: #f0e7d6;
+  --color-sage: #9dbdb8;
+  --color-flame: #ea2e00;
+  --color-ink: #1f1a17;
+
+  --ease-oil: cubic-bezier(0.22, 1, 0.36, 1);
+  --shadow-soft: 0 1px 2px rgb(31 26 23 / 0.06), 0 8px 24px -12px rgb(31 26 23 / 0.18);
+}
+
+:root {
+  --line-cut: var(--color-stone-900);
+  --line-mountain: var(--color-orange-600);
+  --line-valley: #2457c5;
+  --line-perforation: var(--color-sage-600);
+  --line-score: var(--color-stone-500);
+  --panel-fill: #fbf7f0;
+  --panel-fill-tab: var(--color-stone-100);
+  --panel-fill-hover: var(--color-sage-100);
+  --panel-fill-selected: var(--color-orange-100);
+  --canvas-bg: var(--color-stone-100);
+  --grid-minor: color-mix(in oklab, var(--color-stone-400) 22%, transparent);
+  --grid-major: color-mix(in oklab, var(--color-stone-500) 32%, transparent);
+  color-scheme: light;
+}
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    @apply bg-stone-50 font-sans text-stone-900 antialiased;
+    font-optical-sizing: auto;
+  }
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-orange-600;
+  }
+}
+
+/* Lenis smooth scroll */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* Animasi mini yang berhenti saat di luar layar */
+[data-paused="true"] *,
+[data-paused="true"] {
+  animation-play-state: paused !important;
+}
+
+@keyframes marquee {
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+@keyframes spin-y {
+  from {
+    transform: rotateX(-22deg) rotateY(0deg);
+  }
+  to {
+    transform: rotateX(-22deg) rotateY(360deg);
+  }
+}
+@keyframes unfold {
+  0%,
+  15%,
+  100% {
+    transform: translate3d(var(--tx), var(--ty), 0);
+  }
+  45%,
+  80% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+@keyframes sheet {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(12px, -4px, 0) rotate(var(--r));
+  }
+}
+@keyframes draw {
+  0% {
+    stroke-dashoffset: 1;
+  }
+  60%,
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes float-y {
+  50% {
+    transform: translate3d(0, -8px, 0);
+  }
+}
+@keyframes nudge {
+  50% {
+    transform: translate3d(0, 6px, 0);
+  }
+}
+@keyframes pulse-soft {
+  50% {
+    transform: scale(1.04);
+  }
+}
+@keyframes fade-cycle {
+  0%,
+  100% {
+    opacity: 0.15;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Kursor kustom landing (desktop) */
+html.lp-cursor,
+html.lp-cursor * {
+  cursor: none;
+}
+html.lp-cursor input,
+html.lp-cursor [role="slider"] {
+  cursor: auto;
+}
