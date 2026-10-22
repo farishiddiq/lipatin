@@ -90,7 +90,8 @@ export class NetBuilder {
       for (const [pid, i] of options) {
         let [a, b] = this.edge(pid, i);
         const L0 = dist(a, b);
-        if (L0 - 2 * margin < 4) continue;
+        // tepi pendek tidak diberi tab (sama seperti hasil bongkar): terlalu kecil untuk dilem
+        if (L0 - 2 * margin < 8) continue;
         if (margin > 0) {
           const u = norm(sub(b, a));
           [a, b] = [add(a, scale(u, margin)), add(b, scale(u, -margin))];

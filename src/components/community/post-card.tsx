@@ -9,10 +9,17 @@ import { resolveNet } from "@/lib/geometry/resolve";
 import { emptyMods } from "@/lib/geometry/types";
 import { templateById } from "@/lib/templates";
 
+const postNets = new Map<string, ReturnType<typeof resolveNet>>();
+
 export function usePostNet(p: CommunityPost) {
   return useMemo(() => {
+    // model 3D cukup berat: hitung sekali per karya
+    const hit = postNets.get(p.id);
+    if (hit) return hit;
     const t = templateById(p.templateId)!;
-    return resolveNet(t.build(p.params, { t: 3, compensate: true }), emptyMods(), [], 3);
+    const net = resolveNet(t.build(p.params, { t: 3, compensate: true }), emptyMods(), [], 3);
+    postNets.set(p.id, net);
+    return net;
   }, [p]);
 }
 

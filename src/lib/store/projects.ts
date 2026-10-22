@@ -74,8 +74,8 @@ export const useProjects = create<ProjectsState>()(
     {
       name: "lipatin-projects",
       storage: safeStorage,
-      version: 2,
-      // v2: template kembar dihapus; alihkan proyek (dan riwayat versinya) ke penggantinya
+      version: 3,
+      // v2–v3: template lama dihapus; alihkan proyek (dan riwayat versinya) ke pengganti 3D-nya
       migrate: (state) => {
         const s = state as Pick<ProjectsState, "projects" | "plan">;
         const projects = Object.fromEntries(

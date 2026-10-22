@@ -83,8 +83,8 @@ export function SiteFooter() {
           </p>
         </div>
         {[
-          { h: "Buat", l: [["/template", "Galeri template"], ["/studio?template=kotak-selip", "Studio editor"], ["/bongkar", "Bongkar model 3D"], ["/gambar", "Gambar jadi pola"]] },
-          { h: "Belajar", l: [["/panduan?template=kubus", "Panduan rakit"], ["/komunitas", "Karya komunitas"], ["/template?kategori=edukasi", "Bangun ruang"]] },
+          { h: "Buat", l: [["/template", "Galeri template"], ["/studio?template=controller-ps4", "Studio editor"], ["/bongkar", "Bongkar model 3D"], ["/gambar", "Gambar jadi pola"]] },
+          { h: "Belajar", l: [["/panduan?template=roket-3d", "Panduan rakit"], ["/komunitas", "Karya komunitas"], ["/template?kategori=kendaraan", "Kendaraan 3D"]] },
           { h: "Lipatin", l: [["/harga", "Paket & harga"], ["/dashboard", "Proyek saya"]] },
         ].map((c) => (
           <div key={c.h} className="flex flex-col gap-2 text-sm">

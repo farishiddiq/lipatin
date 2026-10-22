@@ -124,6 +124,35 @@ export function unfoldMesh(mesh: RawMesh, opts: UnfoldOptions): UnfoldResult {
     arr.push(i);
     groups.set(r, arr);
   });
+  // sisi datar berlubang (cincin/donat) tidak bisa jadi satu panel: pecah kembali per segitiga
+  const loopCount = (g: number[]) => {
+    const inG = new Set(g);
+    const next = new Map<number, number>();
+    for (const t of g)
+      for (let e = 0; e < 3; e++) {
+        const a = tris[t][e],
+          b = tris[t][(e + 1) % 3];
+        if (!edgeTris.get(ekey(a, b))!.some((o) => o !== t && inG.has(o))) next.set(a, b);
+      }
+    const seen = new Set<number>();
+    let loops = 0;
+    for (const st of next.keys()) {
+      if (seen.has(st)) continue;
+      loops++;
+      let cur = st,
+        guard = 0;
+      while (!seen.has(cur) && next.has(cur) && guard++ < 10000) {
+        seen.add(cur);
+        cur = next.get(cur)!;
+      }
+    }
+    return loops;
+  };
+  for (const [key, g] of [...groups]) {
+    if (g.length < 3 || loopCount(g) <= 1) continue;
+    groups.delete(key);
+    for (const t of g) groups.set(-1 - t, [t]);
+  }
 
   const faces: Face[] = [];
   const triFace = new Int32Array(tris.length);
@@ -204,7 +233,15 @@ export function unfoldMesh(mesh: RawMesh, opts: UnfoldOptions): UnfoldResult {
   }
   const adjs: Adj[] = [];
   for (const rec of adjMap.values()) {
-    // gabungkan sub-tepi segaris: ambil dua titik terjauh
+    // gabungkan sub-tepi segaris: ambil dua titik terjauh. Dua sisi bisa bersentuhan di beberapa
+    // tepi yang tidak segaris (bentuk cincin); pakai hanya tepi yang segaris dengan tepi terpanjang.
+    const elen = (e: [number, number, number, number]) => verts[e[0]].distanceTo(verts[e[1]]);
+    const longest = rec.edges.reduce((a, b) => (elen(b) > elen(a) ? b : a));
+    const A0 = verts[longest[0]],
+      dir = new Vector3().subVectors(verts[longest[1]], A0).normalize();
+    const onLine = (v: number) => new Vector3().subVectors(verts[v], A0).cross(dir).length() < q * 50;
+    const line = rec.edges.filter((e) => onLine(e[0]) && onLine(e[1]));
+    rec.edges = line.length ? line : [longest];
     const pts = [...new Set(rec.edges.flatMap((e) => [e[0], e[1]]))];
     let u = pts[0],
       v = pts[1],
@@ -233,6 +270,7 @@ export function unfoldMesh(mesh: RawMesh, opts: UnfoldOptions): UnfoldResult {
   const islandMembers: number[][] = [];
   const islandFrames: Matrix4[] = [];
   const poly = (fi: number) => faces[fi].loop.map((v) => pos2.get(fi)!.get(v)!);
+  const boxOf = new Map<number, ReturnType<typeof bbox>>();
 
   const placeRoot = (fi: number) => {
     const f = faces[fi];
@@ -292,6 +330,7 @@ export function unfoldMesh(mesh: RawMesh, opts: UnfoldOptions): UnfoldResult {
     const isl = islandMembers.length;
     islandMembers.push([root]);
     placeRoot(root);
+    boxOf.set(root, bbox(poly(root)));
     island[root] = isl;
     remaining.delete(root);
     const queue: number[] = [root];
@@ -308,7 +347,12 @@ export function unfoldMesh(mesh: RawMesh, opts: UnfoldOptions): UnfoldResult {
           const m = placeChild(nb, cur, a);
           const pts = faces[nb].loop.map((v) => m.get(v)!);
           pos2.set(nb, m);
-          const clash = islandMembers[isl].some((o) => polygonsOverlap(pts, poly(o)));
+          const bb = bbox(pts);
+          const clash = islandMembers[isl].some((o) => {
+            const ob = boxOf.get(o)!;
+            if (ob.maxX <= bb.minX + 0.01 || bb.maxX <= ob.minX + 0.01 || ob.maxY <= bb.minY + 0.01 || bb.maxY <= ob.minY + 0.01) return false;
+            return polygonsOverlap(pts, poly(o));
+          });
           if (clash) {
             pos2.delete(nb);
             continue;
@@ -320,6 +364,7 @@ export function unfoldMesh(mesh: RawMesh, opts: UnfoldOptions): UnfoldResult {
           const convex = new Vector3().subVectors(verts[wc], verts[a.u]).dot(n1) < 0;
           panelParent.set(nb, { parent: cur, adj: a, angle: convex ? alpha : -alpha });
           island[nb] = isl;
+          boxOf.set(nb, bb);
           islandMembers[isl].push(nb);
           remaining.delete(nb);
           queue.push(nb);
@@ -396,7 +441,8 @@ export function unfoldMesh(mesh: RawMesh, opts: UnfoldOptions): UnfoldResult {
         const A = shiftPt(fi, a.u);
         const B = shiftPt(fi, a.v);
         const L = dist(A, B);
-        if (L < 4) return false;
+        // tepi pendek tidak diberi tab: terlalu kecil untuk dilem dan tak terbaca sebagai sambungan
+        if (L < 8) return false;
         const host = panels.find((p) => p.id === faceIds.get(fi))!;
         const ex = norm(sub(B, A));
         let ey = perp(ex);

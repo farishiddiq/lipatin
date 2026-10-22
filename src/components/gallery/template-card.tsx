@@ -2,48 +2,110 @@
 
 import { ArrowUpRight, Clock, Rotate3d, Users } from "lucide-react";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { NetSvg } from "@/components/net/net-svg";
 import { LazyFoldViewer } from "@/components/three/lazy";
+import { cachedSnapshot, snapshot } from "@/components/three/snapshot";
 import { resolveNet } from "@/lib/geometry/resolve";
-import { emptyMods } from "@/lib/geometry/types";
 import { defaultMaterial } from "@/lib/materials";
+import { emptyMods } from "@/lib/geometry/types";
 import { CATEGORIES, defaultParams, type Template } from "@/lib/templates";
 import { cn } from "@/lib/utils";
 
 export const DIFF_LABEL = { mudah: "Mudah", sedang: "Sedang", sulit: "Sulit" } as const;
 const DIFF_DOT = { mudah: "bg-sage-500", sedang: "bg-amber-500", sulit: "bg-flame" } as const;
 
+const netCache = new Map<string, ReturnType<typeof resolveNet>>();
+
+/** Pola default template; disimpan per id karena template 3D cukup berat dihitung. */
+export function templateNet(t: Template) {
+  let net = netCache.get(t.id);
+  if (!net) {
+    net = resolveNet(t.build(defaultParams(t), { t: 3, compensate: true }), emptyMods(), [], 3);
+    netCache.set(t.id, net);
+  }
+  return net;
+}
+
 export function useTemplateNet(t: Template) {
-  return useMemo(() => resolveNet(t.build(defaultParams(t), { t: 3, compensate: true }), emptyMods(), [], 3), [t]);
+  return useMemo(() => templateNet(t), [t]);
+}
+
+/** Hitung pola hanya setelah kartu mendekati layar, supaya galeri tetap ringan. */
+function useNearViewport<T extends Element>() {
+  const ref = useRef<T>(null);
+  const [near, setNear] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || near) return;
+    const io = new IntersectionObserver((es) => es.some((e) => e.isIntersecting) && setNear(true), { rootMargin: "400px 0px" });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [near]);
+  return [ref, near] as const;
+}
+
+function CardNet({ t }: { t: Template }) {
+  const net = useTemplateNet(t);
+  return <NetSvg net={net} className="max-h-full max-w-full" title={`Pola 2D ${t.title}`} />;
+}
+
+/** 3D yang bisa diputar: mulai dari hasil jadi, lalu membuka jadi pola dan terlipat lagi. */
+function CardFold({ t }: { t: Template }) {
+  const net = useTemplateNet(t);
+  const material = useMemo(defaultMaterial, []);
+  return <LazyFoldViewer net={net} material={material} loop startFolded autoRotate zoom={false} label={`Model 3D ${t.title}: seret untuk memutar, lalu lihat polanya terbuka`} />;
+}
+
+/** Foto hasil jadi (3D terlipat penuh); sebelum siap, pola tampil samar sebagai pengganti. */
+function useSnapshot(t: Template, enabled: boolean) {
+  const [url, setUrl] = useState<string | null>(() => cachedSnapshot(t.id) ?? null);
+  useEffect(() => {
+    if (!enabled || url) return;
+    let alive = true;
+    snapshot(t.id, templateNet(t)).then((u) => alive && setUrl(u));
+    return () => {
+      alive = false;
+    };
+  }, [enabled, t, url]);
+  return url;
 }
 
 export function TemplateCard({ t }: { t: Template }) {
-  const net = useTemplateNet(t);
-  const [show3d, setShow3d] = useState(false);
-  const material = useMemo(defaultMaterial, []);
-  const cat = CATEGORIES.find((c) => c.id === t.category)?.label.replace(" (bangun ruang)", "");
+  // tampil foto hasil jadi dulu; 3D yang bisa diputar muncul saat kartu disorot (mouse) atau tombol diketuk
+  const [live, setLive] = useState(false);
+  const [ref, near] = useNearViewport<HTMLDivElement>();
+  const shot = useSnapshot(t, near);
+  const cat = CATEGORIES.find((c) => c.id === t.category)?.label;
   const isNew = t.tags.includes("jagoan") || t.tags.includes("baru");
+  const is3d = t.tags.includes("3d");
   return (
     <article
       className="group flex w-full flex-col overflow-hidden rounded-3xl bg-white shadow-soft transition-transform duration-500 ease-[var(--ease-oil)] hover:-translate-y-1"
-      onPointerEnter={(e) => e.pointerType === "mouse" && setShow3d(true)}
-      onPointerLeave={(e) => e.pointerType === "mouse" && setShow3d(false)}
+      onPointerEnter={(e) => e.pointerType === "mouse" && setLive(true)}
+      onPointerLeave={(e) => e.pointerType === "mouse" && setLive(false)}
     >
-      <div className="relative m-2 aspect-[4/3] overflow-hidden rounded-2xl bg-cream">
-        {show3d ? (
-          <LazyFoldViewer net={net} material={material} loop autoRotate label={`Pratinjau 3D ${t.title}, bisa diputar`} />
-        ) : (
-          <div className="flex size-full items-center justify-center p-6 transition-transform duration-500 ease-[var(--ease-oil)] group-hover:scale-[1.03]">
-            <NetSvg net={net} className="max-h-full max-w-full" title={`Pola 2D ${t.title}`} />
+      <div ref={ref} className="relative m-2 aspect-[4/3] overflow-hidden rounded-2xl bg-cream">
+        {!shot && (
+          <div className="absolute inset-0 flex items-center justify-center p-6 opacity-30" aria-hidden>
+            {near && <CardNet t={t} />}
           </div>
         )}
-        {isNew && <span className="absolute top-3 left-3 rounded-full bg-flame px-2 py-1 text-xs font-bold text-white">Baru</span>}
+        {shot && <img src={shot} alt={`Hasil jadi ${t.title} dalam 3D`} className={cn("absolute inset-0 size-full object-contain transition-opacity duration-300", live && "opacity-0")} />}
+        {live && (
+          <div className="absolute inset-0">
+            <CardFold t={t} />
+          </div>
+        )}
+        {isNew && <span className="absolute top-3 left-3 rounded-full bg-flame px-2 py-1 text-xs font-bold text-white">{is3d ? "Baru · 3D" : "Baru"}</span>}
+        <span className="absolute bottom-3 left-3 rounded-full bg-white/90 px-2 py-1 text-xs font-semibold text-stone-600" aria-hidden>
+          {live ? "Seret untuk memutar" : "Hasil jadi"}
+        </span>
         <button
           type="button"
-          onClick={() => setShow3d((v) => !v)}
-          aria-pressed={show3d}
-          aria-label={show3d ? `Lihat pola 2D ${t.title}` : `Putar 3D ${t.title}`}
+          onClick={() => setLive((v) => !v)}
+          aria-pressed={live}
+          aria-label={live ? `Kembali ke foto hasil jadi ${t.title}` : `Putar 3D dan lihat pola ${t.title}`}
           className="absolute top-3 right-3 z-10 flex size-10 items-center justify-center rounded-full bg-white/95 text-ink shadow-soft transition-transform duration-300 ease-[var(--ease-oil)] hover:rotate-12 active:scale-90"
         >
           <Rotate3d className="size-5" aria-hidden />

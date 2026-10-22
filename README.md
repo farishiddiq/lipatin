@@ -17,7 +17,7 @@ Buka http://localhost:3000. Semua proyek tersimpan di `localStorage` browser (be
 | --- | --- |
 | `/` | Landing satu halaman: preloader → hero kotak CSS 3D yang melipat mengikuti scroll, cara kerja, bento semua fitur, demo interaktif (logo di sisi kardus, gambar → pola → 3D), bukti angka, penutup. Satu CTA, tanpa menu |
 | `/gambar` | Gambar → pola: deteksi kontur, penyederhanaan poligon, 3 tipe konstruksi, simulasi lipat 3D, buka di Studio |
-| `/template` | Galeri 87 template parametrik di 16 kategori (termasuk 20 template "Jagoan", 22 template tematik: hewan peliharaan, meja & kantor, pesta, hari raya, sains & eksperimen, arsitektur Nusantara, serta 18 template "Main peran" dan "Hobi bapak"). Satu kotak cari + chip kategori; filter kesulitan/waktu/ukuran/usia di dalam tombol Filter; pratinjau 3D yang bisa diputar |
+| `/template` | Galeri 149 model 3D dalam 4 kelompok dan 21 kategori: Mainan 3D (13), Budaya (20 Nusantara + 20 Mesir kuno), Cita-cita (42: dokter, pilot & astronot, chef & barista, pemadam & polisi, arsitek, ilmuwan, dokter hewan), dan Hobi (54: gaming, musik, konten kreator, fashion, rumah boneka, olahraga meja, berkebun, koleksi, cosplay). Banyak yang fungsional: pintu, laci, sekat silang, lubang, dan jaring. Kartu menampilkan foto hasil jadi; disorot/diketuk jadi 3D yang bisa diputar lalu membuka jadi pola. Tiap model dibongkar otomatis dari bentuk 3D-nya. Satu kotak cari + chip kategori; filter kesulitan/waktu/ukuran/usia di dalam tombol Filter; pratinjau 3D yang bisa diputar |
 | `/studio` | Editor: kanvas 2D (grid, snap, penggaris, mm/cm/inci), alat gambar, alat kardus, viewer 3D berdampingan, panel parameter/desain/material/validasi. Tab **Desain**: unggah logo, pilih sisi (chip atau klik di 2D/3D), posisi/skala/rotasi per sisi, ulangi ke semua sisi; ikut ke ekspor. Editor desain bawaan = kartu terkunci "Pro · Segera" |
 | `/bongkar` | Unfold Studio: bentuk dasar, impor OBJ/STL/GLB, penyederhanaan mesh, bongkar di Web Worker |
 | `/ekspor` | PDF 1:1 ditiling A4/A3/F4/Letter + kotak kalibrasi 10 cm, SVG berlapis, PNG, daftar bahan |
@@ -45,4 +45,4 @@ Buka http://localhost:3000. Semua proyek tersimpan di `localStorage` browser (be
 - Bahasa Inggris (UI masih Bahasa Indonesia saja).
 - Ekspor DXF, nesting otomatis, mode unfold slice/waffle, deteksi tabrakan 3D, AR.
 - Komentar & tantangan komunitas; foto hasil nyata.
-- Template sudah 87 (melebihi target ±50 MVP); template kemasan FEFCO/ECMA belum ada.
+- Galeri kini berisi 149 model 3D penuh; template kemasan dan bangun ruang lama sudah dihapus; template kemasan FEFCO/ECMA belum ada.

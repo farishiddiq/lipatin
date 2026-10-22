@@ -38,26 +38,30 @@ export interface Project extends ProjectData {
   remixOf?: { title: string; author: string };
 }
 
-/** Template yang dihapus karena kembar dengan template lain: proyek lama dialihkan ke penggantinya. */
+/** Template lama yang sudah dihapus: proyek yang memakainya dialihkan ke versi 3D penggantinya. */
 const RETIRED: Record<string, { to: string; params?: Params }> = {
-  "prisma-segitiga": { to: "prisma-segi-n", params: { n: 3 } },
-  "limas-segiempat": { to: "limas-segi-n", params: { n: 4 } },
-  tenda: { to: "prisma-segi-n", params: { n: 3 } },
-  lampion: { to: "lentera-ramadan" },
-  "helm-robot": { to: "helm-ksatria" },
-  topeng: { to: "topeng-pahlawan" },
-  "kalender-meja": { to: "kartu-meja" },
-  "parsel-lebaran": { to: "kotak-kue" },
+  "tank-baja": { to: "tank-3d" },
+  "jet-tempur": { to: "jet-tempur-3d" },
+  "kapal-bajak-laut": { to: "kapal-bajak-laut-3d" },
+  "kereta-uap": { to: "kereta-uap-3d" },
+  helikopter: { to: "helikopter-3d" },
+  "dino-trex": { to: "trex-3d" },
+  "robot-pahlawan": { to: "robot-3d" },
+  "pedang-ksatria": { to: "pedang-3d" },
+  mobil: { to: "mobil-sport-3d" },
+  truk: { to: "truk-monster-3d" },
+  "bus-sekolah": { to: "truk-monster-3d" },
+  roket: { to: "roket-3d" },
+  "kapal-selam": { to: "kapal-bajak-laut-3d" },
 };
 
-/** Alihkan proyek dari template yang sudah dihapus; ukuran yang namanya sama tetap dipakai. */
+/** Alihkan proyek dari template yang sudah dihapus; ukuran default pengganti yang dipakai. */
 export function migrateProjectData<T extends ProjectData>(d: T): T {
   if (d.source.kind !== "template") return d;
   const r = RETIRED[d.source.templateId];
   const t = r && templateById(r.to);
   if (!r || !t) return d;
-  const old = d.source.params;
-  const params = Object.fromEntries(t.params.map((q) => [q.key, r.params?.[q.key] ?? old[q.key] ?? q.default]));
+  const params = Object.fromEntries(t.params.map((q) => [q.key, r.params?.[q.key] ?? q.default]));
   // id panel berubah, jadi ubahan tab/sudut lama tidak berlaku lagi
   return { ...d, source: { kind: "template", templateId: r.to, params }, mods: emptyMods() };
 }

@@ -9,7 +9,7 @@ import { TemplateCard } from "@/components/gallery/template-card";
 import { OIL, SplitReveal } from "@/components/landing/motion-kit";
 import { Button } from "@/components/ui/button";
 import { Select } from "@/components/ui/select";
-import { CATEGORIES, defaultParams, TEMPLATES, type Template } from "@/lib/templates";
+import { CATEGORIES, CATEGORY_GROUPS, defaultParams, TEMPLATES, type Template } from "@/lib/templates";
 import { cn } from "@/lib/utils";
 
 const TIME = [
@@ -38,27 +38,30 @@ const SIZE = [
 ];
 
 const EMOJI: Record<string, string> = {
-  all: "✨",
-  jagoan: "⚔️",
-  kemasan: "📦",
-  edukasi: "📐",
-  mainan: "🚂",
-  rumah: "🏠",
-  furnitur: "🪑",
-  dekorasi: "🏮",
-  kostum: "🎭",
-  origami: "🪭",
-  hewan: "🐾",
-  kantor: "🗂️",
-  pesta: "🎉",
-  hariraya: "🌙",
-  sains: "🔬",
-  nusantara: "🏯",
-  mainperan: "🧸",
-  hobibapak: "🛠️",
+  kendaraan: "🚀",
+  figur: "🦖",
+  replika: "🎮",
+  nusantara: "🛕",
+  mesir: "🏺",
+  dokter: "🩺",
+  pilot: "✈️",
+  chef: "👩‍🍳",
+  pemadam: "🚒",
+  arsitek: "🏗️",
+  ilmuwan: "🔬",
+  dokterhewan: "🐾",
+  gaming: "🕹️",
+  musik: "🎸",
+  kreator: "📸",
+  fashion: "💄",
+  rumahboneka: "🏠",
+  olahraga: "⚽",
+  kebun: "🌱",
+  koleksi: "🧸",
+  cosplay: "🦸",
 };
 
-const CHIPS = [{ id: "all", label: "Semua" }, { id: "jagoan", label: "Jagoan" }, ...CATEGORIES.map((c) => ({ id: c.id, label: c.label.replace(" (bangun ruang)", "") }))];
+const groupOf = (id: string) => CATEGORY_GROUPS.find((g) => g.id === id || (g.cats as string[]).includes(id));
 
 const sheetFits = (w: number, h: number, W: number, H: number) => (w <= W && h <= H) || (w <= H && h <= W);
 
@@ -96,7 +99,8 @@ export function Gallery() {
   const list = useMemo(() => {
     const needle = q.trim().toLowerCase();
     return TEMPLATES.filter((t) => {
-      if (cat === "jagoan" ? !t.tags.includes("jagoan") : cat !== "all" && t.category !== cat) return false;
+      const g = CATEGORY_GROUPS.find((x) => x.id === cat);
+      if (g ? !(g.cats as string[]).includes(t.category) : cat !== "all" && t.category !== cat) return false;
       if (diff !== "all" && t.difficulty !== diff) return false;
       if (time === "15" && t.minutes > 15) return false;
       if (time === "30" && (t.minutes <= 15 || t.minutes > 30)) return false;
@@ -136,7 +140,7 @@ export function Gallery() {
         <SplitReveal as="h1" text="Pilih. Ubah. Lipat." className="col-span-12 text-[clamp(56px,9vw,144px)] leading-[0.9] font-bold tracking-[-0.03em] md:col-span-9" />
         <p className="col-span-12 text-base text-stone-600 md:col-span-3 md:text-right">
           <span className="block text-4xl font-bold tracking-[-0.03em] text-ink tabular-nums">{TEMPLATES.length}</span>
-          template siap diukur ulang
+          model 3D siap dirakit
         </p>
       </header>
 
@@ -151,7 +155,7 @@ export function Gallery() {
             type="search"
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="Cari pedang, kotak kue, limas…"
+            placeholder="Cari Borobudur, Sphinx, controller…"
             className="h-12 min-w-0 flex-1 bg-transparent text-lg placeholder:text-stone-400 focus:outline-none"
           />
           {q && (
@@ -190,23 +194,45 @@ export function Gallery() {
           </Popover.Root>
         </div>
 
-        <div role="group" aria-label="Kategori" className="-mx-6 flex gap-2 overflow-x-auto px-6 pb-2 md:mx-0 md:flex-wrap md:px-0">
-          {CHIPS.map((c) => (
-            <button
-              key={c.id}
-              type="button"
-              aria-pressed={cat === c.id}
-              onClick={() => setCat(c.id)}
-              className={cn(
-                "inline-flex h-10 shrink-0 items-center gap-2 rounded-full px-4 text-sm font-semibold transition-[transform,background-color,color] duration-300 ease-[var(--ease-oil)] active:scale-95",
-                cat === c.id ? "bg-flame text-white" : "bg-white text-ink shadow-soft hover:-translate-y-0.5",
-              )}
-            >
-              <span aria-hidden>{EMOJI[c.id]}</span>
-              {c.label}
-            </button>
-          ))}
+        <div role="group" aria-label="Kelompok" className="-mx-6 flex gap-2 overflow-x-auto px-6 pb-1 md:mx-0 md:flex-wrap md:px-0">
+          {[{ id: "all", label: "Semua", emoji: "✨" }, ...CATEGORY_GROUPS].map((g) => {
+            const on = g.id === "all" ? cat === "all" : groupOf(cat)?.id === g.id;
+            return (
+              <button
+                key={g.id}
+                type="button"
+                aria-pressed={on}
+                onClick={() => setCat(g.id)}
+                className={cn(
+                  "inline-flex h-11 shrink-0 items-center gap-2 rounded-full px-5 text-sm font-bold transition-[transform,background-color,color] duration-300 ease-[var(--ease-oil)] active:scale-95",
+                  on ? "bg-ink text-cream" : "bg-white text-ink shadow-soft hover:-translate-y-0.5",
+                )}
+              >
+                <span aria-hidden>{g.emoji}</span>
+                {g.label}
+              </button>
+            );
+          })}
         </div>
+        {groupOf(cat) && (
+          <div role="group" aria-label={`Kategori ${groupOf(cat)!.label}`} className="-mx-6 flex gap-2 overflow-x-auto px-6 pb-2 md:mx-0 md:flex-wrap md:px-0">
+            {[{ id: groupOf(cat)!.id, label: `Semua ${groupOf(cat)!.label}` }, ...CATEGORIES.filter((c) => (groupOf(cat)!.cats as string[]).includes(c.id))].map((c) => (
+              <button
+                key={c.id}
+                type="button"
+                aria-pressed={cat === c.id}
+                onClick={() => setCat(c.id)}
+                className={cn(
+                  "inline-flex h-9 shrink-0 items-center gap-2 rounded-full px-4 text-sm font-semibold transition-[transform,background-color,color] duration-300 ease-[var(--ease-oil)] active:scale-95",
+                  cat === c.id ? "bg-flame text-white" : "bg-white text-ink shadow-soft hover:-translate-y-0.5",
+                )}
+              >
+                {EMOJI[c.id] && <span aria-hidden>{EMOJI[c.id]}</span>}
+                {c.label}
+              </button>
+            ))}
+          </div>
+        )}
         <p className="text-sm text-stone-500" aria-live="polite">
           <span className="font-semibold text-ink tabular-nums">{list.length}</span> template
           {activeFilters > 0 && (

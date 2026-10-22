@@ -4,7 +4,7 @@ import { Gallery } from "./gallery";
 
 export const metadata: Metadata = {
   title: "Galeri template",
-  description: "Template pola kardus parametrik: kemasan, bangun ruang, mainan, senjata & kostum jagoan, rumah mini, furnitur, dekorasi, dan origami kardus.",
+  description: "Model 3D dari kardus: mainan seperti controller PS4 dan tank, ikon Nusantara seperti Borobudur dan Rumah Gadang, serta Mesir kuno seperti Sphinx dan piramida, dibongkar otomatis jadi pola siap potong.",
 };
 
 export default function TemplatePage() {

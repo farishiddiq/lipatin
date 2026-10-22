@@ -27,6 +27,10 @@ interface Props {
   source?: ProgressSource;
   /** Animasi lipat-bongkar berulang (untuk hero & kartu galeri). */
   loop?: boolean;
+  /** Mulai animasi berulang dari keadaan terlipat penuh (hasil jadi dulu, baru membuka jadi pola). */
+  startFolded?: boolean;
+  /** Matikan zoom roda mouse (kartu galeri: roda tetap menggulir halaman). */
+  zoom?: boolean;
   /** Animasi berbasis waktu (detik) — dipakai panduan rakit per langkah. */
   timeline?: (t: number) => number | ProgressFn;
   autoRotate?: boolean;
@@ -88,14 +92,15 @@ export function FoldViewer(props: Props) {
   );
 }
 
-function Scene({ net, material, progress = 1, source, loop, timeline, reduced, autoRotate, controls = true, selectedId, hoverId, issueIds, onSelect, onHover, view, decals }: Props & { reduced?: boolean }) {
+function Scene({ net, material, progress = 1, source, loop, startFolded, zoom = true, timeline, reduced, autoRotate, controls = true, selectedId, hoverId, issueIds, onSelect, onHover, view, decals }: Props & { reduced?: boolean }) {
   const invalidate = useThree((s) => s.invalidate);
   const camera = useThree((s) => s.camera);
   const controlsRef = useRef<OrbitControlsImpl>(null);
   const group = useRef<Group>(null);
   const meshes = useRef(new Map<string, Mesh>());
   const mats = useRef(new Map<string, Matrix4>());
-  const loopT = useRef(0);
+  // detik 2,6 = awal fase "tahan terlipat" pada siklus lipat-bongkar di bawah
+  const loopT = useRef(startFolded ? 2.6 : 0);
 
   const materials = useMemo(() => createMaterials(material), [material]);
   useEffect(() => () => disposeMaterials(materials), [materials]);
@@ -266,7 +271,7 @@ function Scene({ net, material, progress = 1, source, loop, timeline, reduced, a
         })}
       </group>
       <ContactShadows position={[0, -0.001, 0]} opacity={0.45} scale={frame.radius * 6 + 2} blur={2.2} far={Math.max(1, frame.folded.y * S * 1.5)} resolution={512} color="#3b2a1a" />
-      {controls && <OrbitControls ref={controlsRef} makeDefault enableDamping={false} autoRotate={autoRotate} autoRotateSpeed={0.8} maxPolarAngle={Math.PI * 0.495} onChange={() => invalidate()} />}
+      {controls && <OrbitControls ref={controlsRef} makeDefault enableDamping={false} enableZoom={zoom} autoRotate={autoRotate} autoRotateSpeed={0.8} maxPolarAngle={Math.PI * 0.495} onChange={() => invalidate()} />}
     </>
   );
 }

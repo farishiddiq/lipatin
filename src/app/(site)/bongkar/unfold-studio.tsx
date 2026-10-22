@@ -49,7 +49,7 @@ export function UnfoldStudio() {
   const [fileError, setFileError] = useState<string | null>(null);
   const [loadingFile, setLoadingFile] = useState(false);
   const [height, setHeight] = useState(150);
-  const [tpl, setTpl] = useState("rumah");
+  const [tpl, setTpl] = useState("roket-3d");
   const [simplified, setSimplified] = useState<{ key: string; mesh: RawMesh } | null>(null);
   const [target, setTarget] = useState(150);
   const [tabs, setTabs] = useState(true);

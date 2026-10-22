@@ -1,4 +1,4 @@
-import { Matrix4, Vector3 } from "three";
+import { Line3, Matrix4, Vector3 } from "three";
 import { foldMatrices } from "./fold";
 import {
   add,
@@ -284,6 +284,9 @@ function computeSeams(r: ResolvedNet): SeamInfo {
   const sameSeg = (p1: Vector3, q1: Vector3, p2: Vector3, q2: Vector3) =>
     (p1.distanceTo(p2) < tol && q1.distanceTo(q2) < tol) || (p1.distanceTo(q2) < tol && q1.distanceTo(p2) < tol);
 
+  const seg = new Line3();
+  const onSeg = (v: Vector3, a: Vector3, b: Vector3) => seg.set(a, b).closestPointToPoint(v, true, new Vector3()).distanceTo(v) < tol;
+
   const used = new Set<number>();
   const seams: Seam[] = [];
   let n = 1;
@@ -302,6 +305,28 @@ function computeSeams(r: ResolvedNet): SeamInfo {
       if (sameSeg(hp, hq, c.p, c.q)) {
         found = i;
         break;
+      }
+    }
+    // tepi pasangan bisa lebih panjang (terbelah titik sudut bagian lain): cukup tab berada di sepanjang tepinya
+    if (found < 0)
+      for (const i of near(m)) {
+        const c = cands[i];
+        if (c.panel.id === p.parent || used.has(i)) continue;
+        if (onSeg(hp, c.p, c.q) && onSeg(hq, c.p, c.q)) {
+          found = i;
+          break;
+        }
+      }
+    // atau sebaliknya: tepi pasangan terbelah jadi beberapa potongan sepanjang tab
+    if (found < 0) {
+      const parts = near(m).filter((i) => {
+        const c = cands[i];
+        return c.panel.id !== p.parent && !used.has(i) && onSeg(c.p, hp, hq) && onSeg(c.q, hp, hq);
+      });
+      const cover = parts.reduce((sum, i) => sum + cands[i].p.distanceTo(cands[i].q), 0);
+      if (parts.length && cover > hp.distanceTo(hq) * 0.8) {
+        found = parts[0];
+        for (const i of parts.slice(1)) used.add(i);
       }
     }
     if (found < 0) {
