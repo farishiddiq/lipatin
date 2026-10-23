@@ -10,8 +10,6 @@ import { Logo } from "./logo";
 
 const NAV = [
   { href: "/template", label: "Template" },
-  { href: "/bongkar", label: "Bongkar 3D" },
-  { href: "/gambar", label: "Gambar → pola" },
   { href: "/komunitas", label: "Komunitas" },
   { href: "/harga", label: "Harga" },
   { href: "/dashboard", label: "Proyek saya" },
@@ -83,7 +81,7 @@ export function SiteFooter() {
           </p>
         </div>
         {[
-          { h: "Buat", l: [["/template", "Galeri template"], ["/studio?template=controller-ps4", "Studio editor"], ["/bongkar", "Bongkar model 3D"], ["/gambar", "Gambar jadi pola"]] },
+          { h: "Buat", l: [["/template", "Galeri template"], ["/studio?template=controller-ps4", "Studio editor"], ["/template?kategori=hobi", "Template hobi"]] },
           { h: "Belajar", l: [["/panduan?template=roket-3d", "Panduan rakit"], ["/komunitas", "Karya komunitas"], ["/template?kategori=kendaraan", "Kendaraan 3D"]] },
           { h: "Lipatin", l: [["/harga", "Paket & harga"], ["/dashboard", "Proyek saya"]] },
         ].map((c) => (

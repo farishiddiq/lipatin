@@ -13,10 +13,10 @@ const inter = localFont({
 export const metadata: Metadata = {
   metadataBase: new URL("https://lipatin.id"),
   title: { default: "Lipatin — Pola potong kardus 2D ↔ 3D", template: "%s · Lipatin" },
-  description: "Rancang pola potong kardus kustom, tempel logo di sisinya, lihat lipatannya dalam 3D, ubah gambar jadi pola, lalu cetak 1:1 dari browser.",
+  description: "Pilih dari 149 model 3D kardus (mainan, budaya, cita-cita, hobi), atur ukurannya, tempel logo, lihat lipatannya dalam 3D, lalu cetak pola 1:1 dari browser.",
   openGraph: {
     title: "Lipatin — Pola potong kardus 2D ↔ 3D",
-    description: "Desain → lihat 3D → sesuaikan → cetak. Template parametrik, logo di sisi kardus, dan gambar jadi pola.",
+    description: "Pilih model → lihat 3D → sesuaikan → cetak. 149 model 3D kardus dan logo di sisi kardus.",
     type: "website",
     locale: "id_ID",
     siteName: "Lipatin",

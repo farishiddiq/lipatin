@@ -95,16 +95,13 @@ function ParamsSection() {
   const easy = useEditor((s) => s.easy);
   const commit = useEditor((s) => s.commit);
   const t = templateOf(data);
-  const fromPhoto = data.source.kind === "net" && data.source.origin === "gambar";
   if (!t || data.source.kind !== "template") {
     return (
       <div className="flex flex-col gap-2 rounded-xl border border-stone-200 p-4 text-sm">
-        <p className="font-bold">{fromPhoto ? "Pola dari foto" : "Pola hasil bongkar 3D"}</p>
-        <p className="text-pretty text-stone-600">
-          {fromPhoto ? "Ukuran dan cetakan foto mengikuti foto asalnya; atur cetakan di tab Desain." : "Ukuran mengikuti model asalnya."} Tambahkan tab, slot, atau lubang dengan alat di kiri; ubah sudut lipat dengan memilih garis lipat.
-        </p>
-        <Link href={fromPhoto ? "/gambar" : "/bongkar"} className="font-semibold text-orange-700 underline-offset-2 hover:underline">
-          {fromPhoto ? "Kembali ke Foto jadi kardus" : "Kembali ke Unfold Studio"}
+        <p className="font-bold">Pola khusus</p>
+        <p className="text-pretty text-stone-600">Ukuran mengikuti pola asalnya. Tambahkan tab, slot, atau lubang dengan alat di kiri; ubah sudut lipat dengan memilih garis lipat.</p>
+        <Link href="/template" className="font-semibold text-orange-700 underline-offset-2 hover:underline">
+          Pilih dari galeri template
         </Link>
       </div>
     );

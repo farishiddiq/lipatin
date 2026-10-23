@@ -57,25 +57,17 @@ export function MiniEditor() {
   );
 }
 
-export function MiniUnfold() {
-  const faces = [
-    { x: 40, y: 0 },
-    { x: 0, y: 40 },
-    { x: 40, y: 40 },
-    { x: 80, y: 40 },
-    { x: 40, y: 80 },
-    { x: 120, y: 40 },
-  ];
+export function MiniCrate() {
+  // rak bersekat silang dengan pintu yang membuka-menutup
   return (
-    <div className="relative h-24 w-40" aria-hidden>
-      {faces.map((f, i) => (
-        <div
-          key={i}
-          className="absolute size-9 rounded-[4px] border border-dashed border-orange-600/60 bg-[#d4a674] motion-safe:animate-[unfold_3.6s_var(--ease-oil)_infinite]"
-          style={{ left: f.x * 0.75 + 8, top: f.y * 0.75, ["--tx" as string]: `${40 * 0.75 + 8 - (f.x * 0.75 + 8)}px`, ["--ty" as string]: `${40 * 0.75 - f.y * 0.75}px` }}
-        />
-      ))}
-    </div>
+    <svg viewBox="0 0 140 100" className="h-24 w-auto" aria-hidden>
+      <rect x="20" y="8" width="84" height="84" rx="4" fill="#fbf7f0" stroke="#1f1a17" strokeWidth="1.6" />
+      <path d="M48 8v84M76 8v84M20 36h84M20 64h84" stroke="#d42900" strokeWidth="1.6" strokeDasharray="5 3" />
+      <g className="origin-[104px_50px] motion-safe:animate-[door_3.2s_var(--ease-oil)_infinite]">
+        <rect x="104" y="8" width="30" height="84" rx="3" fill="#d4a674" stroke="#1f1a17" strokeWidth="1.6" />
+        <circle cx="112" cy="50" r="3" fill="#1f1a17" />
+      </g>
+    </svg>
   );
 }
 
@@ -121,20 +113,17 @@ export function MiniCommunity() {
   );
 }
 
-export function MiniTrace() {
+export function MiniModels() {
+  const groups = ["🚀", "🛕", "🎯", "🎨"];
   return (
-    <svg viewBox="0 0 120 100" className="h-28 w-auto" aria-hidden>
-      <path d="M60 8l13 32 35 2-27 22 9 33-30-19-30 19 9-33-27-22 35-2z" fill="none" stroke="#9dbdb8" strokeWidth="2" strokeDasharray="3 3" />
-      <path
-        d="M60 8l13 32 35 2-27 22 9 33-30-19-30 19 9-33-27-22 35-2z"
-        fill="none"
-        stroke="#ea2e00"
-        strokeWidth="3"
-        strokeLinejoin="round"
-        pathLength={1}
-        strokeDasharray="1 1"
-        className="motion-safe:animate-[draw_3s_var(--ease-oil)_infinite]"
-      />
-    </svg>
+    <div className="flex flex-col items-center gap-3" aria-hidden>
+      <div className="grid grid-cols-2 gap-3">
+        {groups.map((g, i) => (
+          <span key={g} className="flex size-14 items-center justify-center rounded-2xl bg-cream text-2xl shadow-soft motion-safe:animate-[float-y_3s_var(--ease-oil)_infinite]" style={{ animationDelay: `${i * 0.2}s` }}>
+            {g}
+          </span>
+        ))}
+      </div>
+    </div>
   );
 }

@@ -1,13 +1,13 @@
 "use client";
 
-import { BookOpen, Box, CheckCheck, FileDown, Hash, History, ImageUp, LayoutGrid, Link2, Lock, PenTool, Printer, Rotate3d, Ruler, ScanLine, Shapes, ShieldCheck, SlidersHorizontal, Smile, Sticker, Type, Users, Wallet } from "lucide-react";
+import { BookOpen, Box, Boxes, CheckCheck, DoorOpen, FileDown, Hash, History, LayoutGrid, Link2, Lock, PenTool, Printer, Rotate3d, Ruler, Shapes, ShieldCheck, SlidersHorizontal, Smile, Sticker, Type, Users, Wallet } from "lucide-react";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import { useRef, type ReactNode } from "react";
 import { COMMUNITY } from "@/lib/community";
-import { TEMPLATES } from "@/lib/templates";
+import { CATEGORIES, TEMPLATES } from "@/lib/templates";
 import { cn } from "@/lib/utils";
 import { Cta } from "./cta";
-import { MiniCommunity, MiniCube, MiniEditor, MiniExport, MiniGallery, MiniGuide, MiniTrace, MiniUnfold } from "./minis";
+import { MiniCommunity, MiniCrate, MiniCube, MiniEditor, MiniExport, MiniGallery, MiniGuide, MiniModels } from "./minis";
 import { CountUp, Drift, InkEdge, Marquee, OIL, PauseOffscreen, Section, SplitReveal, TiltCard } from "./motion-kit";
 
 const H2 = "text-[clamp(40px,6vw,96px)] leading-[0.92] font-bold tracking-[-0.03em] text-balance";
@@ -100,11 +100,11 @@ interface Feat {
 
 const FEATS: Feat[] = [
   { icon: Sticker, title: "Logo di sisi kardus", mini: <MiniCube logo />, span: "md:col-span-5 md:row-span-2", isNew: true, tone: "ink" },
-  { icon: ImageUp, title: "Gambar jadi pola", mini: <MiniTrace />, span: "md:col-span-4 md:row-span-2", isNew: true, tone: "white" },
+  { icon: Boxes, title: `${TEMPLATES.length} model 3D siap rakit`, mini: <MiniModels />, span: "md:col-span-4 md:row-span-2", isNew: true, tone: "white" },
   { icon: Rotate3d, title: "Preview 3D", mini: <MiniCube />, span: "md:col-span-3", tone: "sage" },
   { icon: LayoutGrid, title: "Galeri template", mini: <MiniGallery />, span: "md:col-span-3", tone: "white" },
   { icon: PenTool, title: "Editor pola 2D", mini: <MiniEditor />, span: "md:col-span-4", tone: "white" },
-  { icon: ScanLine, title: "Bongkar 3D → 2D", mini: <MiniUnfold />, span: "md:col-span-4", tone: "white" },
+  { icon: DoorOpen, title: "Pintu, laci & sekat", mini: <MiniCrate />, span: "md:col-span-4", isNew: true, tone: "white" },
   { icon: FileDown, title: "Ekspor cetak 1:1", mini: <MiniExport />, span: "md:col-span-4", tone: "white" },
   { icon: BookOpen, title: "Panduan rakit", mini: <MiniGuide />, span: "md:col-span-4", tone: "white" },
   { icon: Users, title: "Komunitas & remix", mini: <MiniCommunity />, span: "md:col-span-4", tone: "white" },
@@ -215,9 +215,10 @@ export function ProLockedCard() {
 /* --------------------------------- 5. Bukti --------------------------------- */
 
 const PERSONAS = [
-  { e: "🎨", l: "Kreator" },
+  { e: "🎮", l: "Gamer" },
+  { e: "🩺", l: "Calon dokter" },
   { e: "🧑‍🏫", l: "Guru" },
-  { e: "🧁", l: "UMKM" },
+  { e: "🎨", l: "Kreator" },
   { e: "🛠️", l: "Maker" },
   { e: "👧", l: "Anak" },
 ];
@@ -225,8 +226,8 @@ const PERSONAS = [
 export function Proof() {
   const reduced = useReducedMotion();
   const stats = [
-    { n: TEMPLATES.length, s: "", l: "template" },
-    { n: 500, s: "", l: "sisi unfold" },
+    { n: TEMPLATES.length, s: "", l: "model 3D" },
+    { n: CATEGORIES.length, s: "", l: "kategori hobi & cita-cita" },
     { n: 10, s: " cm", l: "kalibrasi cetak" },
     { n: 0, p: "Rp", s: "", l: "untuk mulai" },
   ];
@@ -238,7 +239,7 @@ export function Proof() {
       </Drift>
       <Section label="Bukti">
         <div className={WRAP}>
-          <SplitReveal as="h2" text="Dari kelas sampai UMKM." className={cn(H2, "col-span-12 text-ink")} />
+          <SplitReveal as="h2" text="Dari mainan sampai cita-cita." className={cn(H2, "col-span-12 text-ink")} />
           <dl className="col-span-12 mt-16 grid grid-cols-2 gap-6 md:grid-cols-4">
             {stats.map((s) => (
               <div key={s.l} className="flex flex-col gap-2">

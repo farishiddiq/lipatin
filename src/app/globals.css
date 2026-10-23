@@ -113,15 +113,15 @@ html.lenis body {
     transform: rotateX(-22deg) rotateY(360deg);
   }
 }
-@keyframes unfold {
+@keyframes door {
   0%,
-  15%,
+  20%,
   100% {
-    transform: translate3d(var(--tx), var(--ty), 0);
+    transform: scaleX(1);
   }
   45%,
-  80% {
-    transform: translate3d(0, 0, 0);
+  75% {
+    transform: scaleX(0.2) skewY(-6deg);
   }
 }
 @keyframes sheet {
@@ -131,15 +131,6 @@ html.lenis body {
   }
   50% {
     transform: translate3d(12px, -4px, 0) rotate(var(--r));
-  }
-}
-@keyframes draw {
-  0% {
-    stroke-dashoffset: 1;
-  }
-  60%,
-  100% {
-    stroke-dashoffset: 0;
   }
 }
 @keyframes float-y {
