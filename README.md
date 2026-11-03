@@ -13,6 +13,8 @@ lipatannya dalam 3D, lalu cetak polanya 1:1 dari browser. Tanpa daftar akun, tan
 
 ![Halaman depan Lipatin dengan judul "Lipat ide jadi kardus." dan kotak kardus 3D](promo/assets/landing.png)
 
+<p align="center"><img src="promo/out/poster-portrait.png" alt="Poster Lipatin: Cetak polanya. Lipat jadi mainan. Pola controller PS4 dan hasil lipatannya" width="420"></p>
+
 ## Fitur
 
 - **149 model 3D** dalam 21 kategori:

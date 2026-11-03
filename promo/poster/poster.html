@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Poster Lipatin</title>
+<style>
+  @font-face {
+    font-family: "Inter";
+    src: url("../../src/app/fonts/InterVariable.woff2") format("woff2");
+    font-weight: 100 900;
+    font-display: block;
+  }
+  :root {
+    --ground: #f0e7d6;
+    --paper: #faf6ef;
+    --ink: #1f1a17;
+    --ink-2: #463d33;
+    --accent: #ea2e00;
+    --on-accent: #ffffff;
+    --m: 64px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--ground); }
+  body {
+    font-family: "Inter", sans-serif;
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+  .poster { position: relative; display: flex; flex-direction: column; background: var(--ground); }
+  .brand { display: flex; align-items: center; gap: 16px; padding: 0 var(--m); font-weight: 800; font-size: 40px; letter-spacing: -0.03em; }
+  .brand img { width: 56px; height: 56px; border-radius: 14px; }
+  h1 {
+    padding: 0 var(--m);
+    font-weight: 850;
+    letter-spacing: -0.045em;
+    line-height: 0.95;
+  }
+  /* a crop of a real screenshot; JS sets the background geometry from data-crop */
+  .shot { background-repeat: no-repeat; background-color: var(--paper); }
+  .main { display: grid; grid-template-columns: 1fr 1fr; }
+  .gains { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; padding: 0 var(--m); }
+  .gains b { display: block; font-size: 40px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.05; }
+  .gains span { display: block; margin-top: 8px; font-size: 23px; line-height: 1.35; color: var(--ink-2); }
+  .cta { background: var(--accent); color: var(--on-accent); padding: 0 var(--m); display: flex; flex-direction: column; justify-content: center; }
+  .cta p { font-size: 28px; font-weight: 600; line-height: 1.3; }
+  .cta strong { display: block; font-size: 52px; font-weight: 800; letter-spacing: -0.035em; line-height: 1.05; }
+
+  /* portrait 1080 x 1350 */
+  .portrait { width: 1080px; height: 1350px; }
+  .portrait .brand { padding-top: 56px; }
+  .portrait h1 { font-size: 94px; margin-top: 44px; }
+  .portrait .main { height: 600px; margin-top: 48px; }
+  .portrait .gains { margin-top: 40px; }
+  .portrait .cta { margin-top: auto; height: 186px; }
+
+  /* square 1080 x 1080 */
+  .square { width: 1080px; height: 1080px; }
+  .square .brand { padding-top: 48px; }
+  .square h1 { font-size: 84px; margin-top: 32px; }
+  .square .main { height: 488px; margin-top: 40px; }
+  .square .cta { margin-top: auto; height: 214px; }
+
+  /* story 1080 x 1920; keep the lowest ~280px free of content */
+  .story { width: 1080px; height: 1920px; }
+  .story .brand { padding-top: 150px; }
+  .story h1 { font-size: 104px; margin-top: 48px; }
+  .story .main { height: 560px; margin-top: 48px; }
+  .story .row { height: 200px; margin-top: 16px; }
+  .story .gains { margin-top: 40px; }
+  .story .cta { margin-top: auto; height: 430px; justify-content: flex-start; padding-top: 48px; }
+</style>
+</head>
+<body>
+<div class="poster" id="poster">
+  <div class="brand"><img src="../../public/icon-192.png" alt="">Lipatin</div>
+  <h1>Cetak polanya.<br>Lipat jadi mainan.</h1>
+  <div class="main">
+    <div class="shot" role="img" aria-label="Pola potong controller PS4 di kanvas Studio Lipatin"
+      data-src="studio@2x.png" data-crop="470,440,900,1020"></div>
+    <div class="shot" role="img" aria-label="Controller PS4 yang sudah dilipat di pratinjau 3D Studio Lipatin"
+      data-src="studio@2x.png" data-crop="1562,686,491,545"></div>
+  </div>
+  <div class="shot row" role="img" data-only="story"
+    aria-label="Galeri Lipatin: controller, mobil sport, truk monster, dan tank dalam 3D"
+    data-src="galeri@2x.png" data-crop="144,995,2592,480"></div>
+  <div class="gains" data-not="square">
+    <div><b>149 model 3D</b><span>Mainan, Nusantara, Mesir kuno, cita-cita, hobi</span></div>
+    <div><b>PDF ukuran asli</b><span>Ditiling ke A4 atau A3 dengan kotak kalibrasi</span></div>
+    <div><b>Gratis total</b><span>Tanpa daftar akun, tanpa batas proyek</span></div>
+  </div>
+  <div class="cta">
+    <p data-only="square">Gratis, tanpa akun · 149 model 3D · PDF siap cetak</p>
+    <p data-not="square">Buka gratis di browser, bisa dipasang sebagai aplikasi</p>
+    <strong>farishiddiq.github.io/lipatin</strong>
+  </div>
+</div>
+<script>
+  const f = new URLSearchParams(location.search).get("f") || "portrait";
+  const poster = document.getElementById("poster");
+  poster.classList.add(f);
+  document.querySelectorAll("[data-only]").forEach((el) => { if (el.dataset.only !== f) el.remove(); });
+  document.querySelectorAll("[data-not]").forEach((el) => { if (el.dataset.not === f) el.remove(); });
+  // fill each box with the given source rectangle, cropping the longer side to keep the aspect
+  const SRC = { "studio@2x.png": [2880, 1800], "galeri@2x.png": [2880, 2000] };
+  document.querySelectorAll(".shot").forEach((el) => {
+    let [sx, sy, sw, sh] = el.dataset.crop.split(",").map(Number);
+    const [iw, ih] = SRC[el.dataset.src];
+    const bw = el.clientWidth, bh = el.clientHeight;
+    const s = Math.max(bw / sw, bh / sh);
+    sx += (sw - bw / s) / 2;
+    sy += (sh - bh / s) / 2;
+    el.style.backgroundImage = `url("${el.dataset.src}")`;
+    el.style.backgroundSize = `${iw * s}px ${ih * s}px`;
+    el.style.backgroundPosition = `${-sx * s}px ${-sy * s}px`;
+  });
+</script>
+</body>
+</html>
