@@ -1,46 +1,80 @@
-# Lipatin — pola potong kardus 2D ↔ 3D
+# Lipatin — pola potong kardus 3D, gratis
 
-Prototipe web dari PRD *Lipatin Platform Kustomisasi Pola Potong Kardus 2D ↔ 3D*. UI dibangun mengikuti skill dari [ibelick/ui-skills](https://github.com/ibelick/ui-skills): **baseline-ui**, **fixing-accessibility**, dan **fixing-motion-performance** (salinannya ada di `.claude/skills/`).
+Lipatin mengubah model 3D menjadi **pola potong kardus siap cetak**. Pilih model, atur ukurannya, lihat
+lipatannya dalam 3D, lalu cetak polanya 1:1 dari browser. Tanpa daftar akun, tanpa biaya.
 
-## Menjalankan
+**Buka:** https://farishiddiq.github.io/lipatin/
+
+## Fitur
+
+- **149 model 3D** dalam 21 kategori:
+  - **Mainan 3D** (13): controller PS4, mobil sport, truk monster, tank, jet, helikopter, roket, robot, T-Rex, pedang, kapal bajak laut, ekskavator, kereta uap.
+  - **Budaya** (40): 20 khas Nusantara (Rumah Gadang, Tongkonan, Borobudur, Prambanan, Monas, pinisi, keris, ondel-ondel, Garuda, …) dan 20 Mesir kuno (piramida, Sphinx, topeng Tutankhamun, Abu Simbel, Anubis, …).
+  - **Cita-cita** (42): dokter & perawat, pilot & astronot, chef & barista, pemadam & polisi, arsitek & insinyur, ilmuwan, dokter hewan.
+  - **Hobi** (54): gaming, musik, konten kreator, fashion & kecantikan, rumah boneka, olahraga meja, berkebun, koleksi & display, cosplay.
+- **Pola fungsional**: kotak dengan pintu atau tutup selip, laci yang bisa ditarik, sekat silang tanpa lem, lubang (jendela, lubang suara, lubang lensa), dan jaring berlubang kisi.
+- **Galeri**: kartu menampilkan foto hasil jadi; disorot (atau diketuk) menjadi model 3D yang bisa diputar lalu membuka menjadi polanya. Kelompok → kategori, pencarian, dan filter kesulitan/waktu/ukuran/usia.
+- **Studio**: atur ukuran model, lihat pola 2D dan lipatan 3D berdampingan, tambah tab/slot/lubang, ubah sudut lipat, cek validasi (panel bertumpuk, tab yatim, tepi tidak menutup).
+- **Logo di sisi kardus**: unggah gambar, pilih sisi, atur posisi/skala/rotasi; ikut ke 3D dan ekspor.
+- **Ekspor cetak 1:1**: PDF ditiling ke A4/A3/F4/Letter dengan kotak kalibrasi 10 cm dan daftar bahan, SVG berlapis, PNG 150/300 dpi.
+- **Panduan rakit** otomatis dengan animasi 3D per langkah, **komunitas** dengan remix, dan **link publik** tanpa login.
+- Semua fitur gratis, tanpa batas proyek, tanpa watermark.
+
+## Cara pakai
+
+1. Buka https://farishiddiq.github.io/lipatin/ lalu klik **Mulai mendesain**.
+2. Pilih model di galeri (sorot kartu untuk melihat 3D dan polanya).
+3. Di Studio, atur ukuran dengan slider; cek tab **Cek** bila ada peringatan.
+4. Klik **Ekspor** → pilih PDF → cetak dengan skala 100% (pastikan kotak kalibrasi tepat 10 cm).
+5. Potong garis tebal, lipat garis putus-putus (merah = lipat gunung, biru = lipat lembah), rekatkan tab sesuai nomor pasangan tepi.
+
+### Pasang sebagai aplikasi (Windows, Android, macOS)
+
+Lipatin adalah aplikasi web progresif (PWA). Di **Chrome** atau **Edge**, buka situsnya lalu klik ikon
+**Instal aplikasi** di bilah alamat (atau menu ⋮ → *Instal Lipatin*). Lipatin akan muncul di Start Menu
+dan berjalan di jendela sendiri. Uninstall dari jendela aplikasi (⋮ → *Copot pemasangan*) atau dari
+pengaturan aplikasi Windows.
+
+## Privasi
+
+- Tidak ada akun, server, atau analitik. Semua proyek tersimpan di `localStorage` browser perangkatmu.
+- Link publik menyimpan data desain di **fragmen URL** (`#...`), yang tidak dikirim ke server mana pun.
+- Gambar logo yang diunggah diproses di browser dan tidak diunggah ke mana-mana.
+
+## Keterbatasan
+
+- Proyek tersimpan per browser/perangkat; menghapus data situs akan menghapus proyek. Belum ada sinkron cloud.
+- Model 3D yang rumit memiliki ratusan panel dan polanya butuh beberapa lembar A3; tepi yang lebih pendek dari 8 mm tidak diberi tab (rekatkan dengan selotip).
+- Antarmuka hanya Bahasa Indonesia.
+- Bagian yang saling menempel pada model 3D digambar sedikit menembus satu sama lain; saat dirakit cukup ditempel di permukaannya.
+
+## Pengembangan
 
 ```bash
 npm install
-npm run dev
+npm run dev        # http://localhost:3000
+npm run lint       # type check (tsc --noEmit)
+npm run build      # ekspor statis ke out/
 ```
 
-Buka http://localhost:3000. Semua proyek tersimpan di `localStorage` browser (belum ada backend).
+Situs dideploy ke GitHub Pages oleh `.github/workflows/pages.yml` setiap ada push ke `main`
+(`NEXT_PUBLIC_BASE_PATH=/<nama-repo>`).
 
-## Halaman
+### Teknologi
 
-| Rute | Isi (PRD §10) |
-| --- | --- |
-| `/` | Landing satu halaman: preloader → hero kotak CSS 3D yang melipat mengikuti scroll, cara kerja, bento semua fitur, demo interaktif (logo di sisi kardus, model 3D yang membuka jadi pola), bukti angka, penutup. Satu CTA, tanpa menu |
-| `/template` | Galeri 149 model 3D dalam 4 kelompok dan 21 kategori: Mainan 3D (13), Budaya (20 Nusantara + 20 Mesir kuno), Cita-cita (42: dokter, pilot & astronot, chef & barista, pemadam & polisi, arsitek, ilmuwan, dokter hewan), dan Hobi (54: gaming, musik, konten kreator, fashion, rumah boneka, olahraga meja, berkebun, koleksi, cosplay). Banyak yang fungsional: pintu, laci, sekat silang, lubang, dan jaring. Kartu menampilkan foto hasil jadi; disorot/diketuk jadi 3D yang bisa diputar lalu membuka jadi pola. Tiap model dibongkar otomatis dari bentuk 3D-nya. Satu kotak cari + chip kategori; filter kesulitan/waktu/ukuran/usia di dalam tombol Filter; pratinjau 3D yang bisa diputar |
-| `/studio` | Editor: kanvas 2D (grid, snap, penggaris, mm/cm/inci), alat gambar, alat kardus, viewer 3D berdampingan, panel parameter/desain/material/validasi. Tab **Desain**: unggah logo, pilih sisi (chip atau klik di 2D/3D), posisi/skala/rotasi per sisi, ulangi ke semua sisi; ikut ke ekspor. Editor desain bawaan = kartu terkunci "Pro · Segera" |
-| `/ekspor` | PDF 1:1 ditiling A4/A3/F4/Letter + kotak kalibrasi 10 cm, SVG berlapis, PNG, daftar bahan |
-| `/panduan` | Panduan rakit otomatis dengan animasi 3D per langkah, mode layar penuh, mode anak + tips keselamatan |
-| `/komunitas` | Feed karya, detail (3D + pola + remix dengan atribusi) |
-| `/dashboard` | Proyek saya: folder, duplikat, hapus (AlertDialog), status paket |
-| `/lihat#…` | Link publik tanpa login; data desain dipadatkan di fragmen URL |
-| `/harga` | Paket Gratis/Pro/Bisnis/Edukasi + toggle Pro demo lokal |
+- **Next.js 16** (App Router, ekspor statis), **React 19**, **Tailwind CSS 4**, Base UI, Zustand, lucide-react.
+- **three.js** + react-three-fiber/drei untuk 3D; tekstur kardus dan flute prosedural.
+- motion/react + Lenis untuk animasi landing; semua menghormati `prefers-reduced-motion`.
+- jsPDF untuk ekspor PDF, lz-string untuk link publik.
 
-## Arsitektur singkat
+### Arsitektur singkat
 
-- **Mesin geometri** (`src/lib/geometry/`) dipakai bersama oleh editor 2D dan viewer 3D:
-  - `builder.ts` — pembangun pola: kotak (dengan kompensasi ketebalan), profil yang diekstrusi (prisma, rumah, mobil…), limas, menara; tab lem pintar yang menghindari tumpang tindih.
-  - `resolve.ts` — menerapkan modifikasi pengguna, mengubah sketsa potong tertutup menjadi lubang, menyusun garis potong/lipat, mencari pasangan tepi (penomoran 1↔1), menghitung sudut tab otomatis, dan validasi (panel bertumpuk, tab yatim, tepi tidak menutup, slot lebih sempit dari kardus).
-  - `fold.ts` — matriks lipat per panel (pohon engsel); sudut positif = lipat gunung.
-  - `unfold.ts` — 3D → 2D: las titik, gabung segitiga sebidang, pohon rentang graf dual dengan deteksi tumpang tindih, pecah jadi beberapa bagian bila perlu, tab lem otomatis.
-- **3D**: react-three-fiber + drei, tekstur kardus & flute prosedural (tanpa unduhan aset), frameloop `demand` dan berhenti saat di luar layar.
-- **UI**: Next.js 16, Tailwind CSS 4, primitif Base UI, Zustand, lucide-react, Inter variable, palet krem `#F0E7D6` / sage `#9DBDB8` / merah api `#EA2E00` (light mode saja).
-- **Motion landing**: motion/react (scroll-linked, split text, count-up, magnetik, tilt), Lenis smooth scroll, filter SVG gooey untuk transisi tinta; semua menghormati `prefers-reduced-motion`.
-- **Gambar → pola** (`src/lib/trace.ts`): masker (alfa atau jarak warna latar + Otsu), penelusuran Moore, Douglas–Peucker, alas di tali busur selubung cembung agar panel tidak bertumpuk.
+- `src/lib/solid.ts` — pembangun bentuk 3D low-poly: loft, selubung cembung, silinder, benda putar, tabung melengkung, elipsoid.
+- `src/lib/geometry/unfold.ts` — bongkar 3D → 2D: las titik, gabung segitiga sebidang (sisi berlubang dipecah), pohon rentang dengan deteksi tumpang tindih, tab lem otomatis.
+- `src/lib/kit.ts` — pembangun pola fungsional: menggabungkan bangun 3D, kotak berpintu/berlubang, profil ekstrusi, dan lembaran lepas (sekat silang, papan, jaring) dengan pose akhirnya.
+- `src/lib/geometry/resolve.ts` — garis potong/lipat, pasangan tepi bernomor, sudut tab otomatis, validasi.
+- `src/lib/templates-*.ts` — katalog model per kelompok.
 
-## Belum dikerjakan (perlu backend atau fase berikutnya)
+## Lisensi
 
-- Akun (email/Google), simpan ke cloud, sinkron offline, analitik.
-- Bahasa Inggris (UI masih Bahasa Indonesia saja).
-- Ekspor DXF, nesting otomatis, mode unfold slice/waffle, deteksi tabrakan 3D, AR.
-- Komentar & tantangan komunitas; foto hasil nyata.
-- Galeri kini berisi 149 model 3D penuh; template kemasan dan bangun ruang lama sudah dihapus; template kemasan FEFCO/ECMA belum ada.
+[MIT](LICENSE) © 2026 farishiddiq

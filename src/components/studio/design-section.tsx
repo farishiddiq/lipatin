@@ -253,7 +253,7 @@ export function ProDesignCard() {
         <div className="flex min-w-0 flex-col gap-1">
           <p className="flex items-center gap-2 text-sm font-bold">
             Editor desain
-            <span className="rounded-full bg-orange-100 px-2 py-0.5 text-[11px] font-bold text-orange-800">Pro · Segera</span>
+            <span className="rounded-full bg-orange-100 px-2 py-0.5 text-[11px] font-bold text-orange-800">Segera</span>
           </p>
           <p className="text-xs text-pretty text-stone-500">Gambar, teks, dan bentuk langsung di permukaan kardus.</p>
           <div className="mt-2 flex gap-2 text-stone-400" aria-hidden>

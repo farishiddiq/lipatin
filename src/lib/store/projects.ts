@@ -5,11 +5,8 @@ import { createJSONStorage, persist } from "zustand/middleware";
 import { migrateProjectData, wrapProject, type Project, type ProjectData } from "../project";
 import { uid } from "../utils";
 
-export const FREE_PROJECT_LIMIT = 10;
-
 interface ProjectsState {
   projects: Record<string, Project>;
-  plan: "free" | "pro";
   create: (data: ProjectData, extra?: Partial<Project>) => Project;
   update: (id: string, patch: Partial<Project>) => void;
   remove: (id: string) => void;
@@ -38,7 +35,6 @@ export const useProjects = create<ProjectsState>()(
   persist(
     (set, get) => ({
       projects: {},
-      plan: "free",
       create: (data, extra) => {
         const p = wrapProject(structuredClone(data), extra);
         set((s) => ({ projects: { ...s.projects, [p.id]: p } }));
@@ -77,7 +73,7 @@ export const useProjects = create<ProjectsState>()(
       version: 3,
       // v2–v3: template lama dihapus; alihkan proyek (dan riwayat versinya) ke pengganti 3D-nya
       migrate: (state) => {
-        const s = state as Pick<ProjectsState, "projects" | "plan">;
+        const s = state as Pick<ProjectsState, "projects">;
         const projects = Object.fromEntries(
           Object.entries(s.projects ?? {}).map(([id, p]) => [id, { ...migrateProjectData(p), versions: (p.versions ?? []).map((v) => ({ ...v, snapshot: migrateProjectData(v.snapshot) })) }]),
         );

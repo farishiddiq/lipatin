@@ -11,7 +11,7 @@ const inter = localFont({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://lipatin.id"),
+  metadataBase: new URL("https://farishiddiq.github.io/lipatin/"),
   title: { default: "Lipatin — Pola potong kardus 2D ↔ 3D", template: "%s · Lipatin" },
   description: "Pilih dari 149 model 3D kardus (mainan, budaya, cita-cita, hobi), atur ukurannya, tempel logo, lihat lipatannya dalam 3D, lalu cetak pola 1:1 dari browser.",
   openGraph: {

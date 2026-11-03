@@ -113,7 +113,6 @@ export interface PdfOptions {
   orientation: "auto" | "portrait" | "landscape";
   overlap: number;
   seams: boolean;
-  watermark: boolean;
   title: string;
   bom: Bom;
   steps: string[];
@@ -163,7 +162,6 @@ export async function exportPdf(net: ResolvedNet, o: PdfOptions): Promise<Blob> 
     doc.setFontSize(7);
     doc.setTextColor(120);
     doc.text(label, PAGE_MARGIN, t.pageH - 4);
-    if (o.watermark) doc.text("Dibuat dengan Lipatin · paket Gratis", t.pageW - PAGE_MARGIN, t.pageH - 4, { align: "right" });
   };
 
   /* ---------- halaman sampul: kalibrasi, cara cetak, peta halaman, bahan ---------- */
@@ -359,12 +357,12 @@ export async function exportPdf(net: ResolvedNet, o: PdfOptions): Promise<Blob> 
   return doc.output("blob");
 }
 
-export function exportSvg(net: ResolvedNet, opts: { seams: boolean; watermark?: boolean; background?: boolean; decals?: DecalRender[] }): string {
+export function exportSvg(net: ResolvedNet, opts: { seams: boolean; background?: boolean; decals?: DecalRender[] }): string {
   const pad = 5;
   const minX = net.bbox.minX - pad;
   const minY = net.bbox.minY - pad;
   const W = net.bbox.maxX - net.bbox.minX + pad * 2;
-  const H = net.bbox.maxY - net.bbox.minY + pad * 2 + (opts.watermark ? 6 : 0);
+  const H = net.bbox.maxY - net.bbox.minY + pad * 2;
   const f = (n: number) => (Math.round(n * 1000) / 1000).toString();
   const segs = allSegments(net);
   const layers = LINE_ORDER.map((k) => {
@@ -388,7 +386,6 @@ export function exportSvg(net: ResolvedNet, opts: { seams: boolean; watermark?: 
         )
         .join("\n")}\n  </g>`
     : "";
-  const wm = opts.watermark ? `  <text x="${f(W - 2)}" y="${f(H - 2)}" font-family="Helvetica, Arial, sans-serif" font-size="3" fill="#a8a29e" text-anchor="end">Dibuat dengan Lipatin · paket Gratis</text>` : "";
   const bg = opts.background ? `  <rect width="100%" height="100%" fill="#ffffff"/>\n` : "";
   const decalEls = (opts.decals ?? [])
     .map((d, i) => {
@@ -406,14 +403,13 @@ export function exportSvg(net: ResolvedNet, opts: { seams: boolean; watermark?: 
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" width="${f(W)}mm" height="${f(H)}mm" viewBox="0 0 ${f(W)} ${f(H)}">
 ${bg}${decalLayer}${layers}
 ${seams}
-${wm}
 </svg>`;
 }
 
-export async function exportPng(net: ResolvedNet, dpi: number, seams: boolean, watermark: boolean, decals?: DecalRender[]): Promise<Blob> {
-  const svg = exportSvg(net, { seams, watermark, background: true, decals });
+export async function exportPng(net: ResolvedNet, dpi: number, seams: boolean, decals?: DecalRender[]): Promise<Blob> {
+  const svg = exportSvg(net, { seams, background: true, decals });
   const W = net.bbox.maxX - net.bbox.minX + 10;
-  const H = net.bbox.maxY - net.bbox.minY + 10 + (watermark ? 6 : 0);
+  const H = net.bbox.maxY - net.bbox.minY + 10;
   let k = dpi / 25.4;
   const maxPx = 12000;
   if (Math.max(W, H) * k > maxPx) k = maxPx / Math.max(W, H);

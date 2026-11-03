@@ -8,7 +8,7 @@ import { Segmented } from "@/components/ui/segmented";
 import { postById } from "@/lib/community";
 import { newProjectData, resolveProject, type ProjectData } from "@/lib/project";
 import { useEditor } from "@/lib/store/editor";
-import { FREE_PROJECT_LIMIT, projectData, useProjects } from "@/lib/store/projects";
+import { projectData, useProjects } from "@/lib/store/projects";
 import { templateById } from "@/lib/templates";
 import { clamp } from "@/lib/utils";
 import { EditorCanvas } from "./canvas";
@@ -19,7 +19,7 @@ import { isAdvancedTool, StudioToolbar, TOOL_KEYS } from "./toolbar";
 import { TopBar } from "./top-bar";
 import { ViewerPanel } from "./viewer-panel";
 
-type LoadState = "loading" | "ready" | "missing" | "limit";
+type LoadState = "loading" | "ready" | "missing";
 
 export function Studio() {
   const sp = useSearchParams();
@@ -67,7 +67,6 @@ export function Studio() {
         } catch {}
       }
       if (!data) return setState("missing");
-      if (store.plan === "free" && Object.keys(store.projects).length >= FREE_PROJECT_LIMIT) return setState("limit");
       const p = store.create(data, extra);
       load(p.id, projectData(p));
       setState("ready");
@@ -84,15 +83,15 @@ export function Studio() {
       </div>
     );
   }
-  if (state === "missing" || state === "limit") {
+  if (state === "missing") {
     return (
       <div className="flex h-dvh flex-col items-center justify-center gap-4 px-6 text-center">
-        <h1 className="text-2xl font-extrabold text-balance">{state === "limit" ? "Batas 10 proyek paket Gratis tercapai" : "Proyek tidak ditemukan"}</h1>
+        <h1 className="text-2xl font-extrabold text-balance">Proyek tidak ditemukan</h1>
         <p className="max-w-md text-pretty text-stone-600">
-          {state === "limit" ? "Hapus proyek lama di Proyek saya, atau tingkatkan ke Pro untuk proyek tanpa batas." : "Proyek ini tidak ada di browser ini. Proyek tersimpan per perangkat; mulai lagi dari galeri template."}
+          Proyek ini tidak ada di browser ini. Proyek tersimpan per perangkat; mulai lagi dari galeri template.
         </p>
-        <Link href={state === "limit" ? "/dashboard" : "/template"} className={buttonClass("primary", "lg")}>
-          {state === "limit" ? "Kelola proyek" : "Buka galeri template"}
+        <Link href="/template" className={buttonClass("primary", "lg")}>
+          Buka galeri template
         </Link>
       </div>
     );

@@ -23,7 +23,6 @@ type Format = "pdf" | "svg" | "png";
 
 export function ExportView() {
   const q = useProjectQuery();
-  const plan = useProjects((s) => s.plan);
   const [format, setFormat] = useState<Format>("pdf");
   const [paper, setPaper] = useState<Paper>("A4");
   const [orientation, setOrientation] = useState<"auto" | "portrait" | "landscape">("auto");
@@ -52,8 +51,6 @@ export function ExportView() {
     );
   }
 
-  const free = plan === "free";
-  const svgLocked = free && format === "svg";
   const pages = tiling.cols * tiling.rows;
   const errors = net.issues.filter((i) => i.level === "error");
 
@@ -64,14 +61,14 @@ export function ExportView() {
     const name = fileSlug(q.data!.title);
     try {
       if (format === "pdf") {
-        const blob = await exportPdf(net, { paper, orientation, overlap, seams, watermark: free, title: q.data!.title, bom, decals, steps: assemblySteps(net).map((s) => `${s.title}. ${s.body}`) });
+        const blob = await exportPdf(net, { paper, orientation, overlap, seams, title: q.data!.title, bom, decals, steps: assemblySteps(net).map((s) => `${s.title}. ${s.body}`) });
         download(blob, `${name}-${paper}.pdf`);
         setDone(`PDF ${pages + 1} halaman siap (1 sampul + ${pages} halaman pola).`);
       } else if (format === "svg") {
         download(new Blob([exportSvg(net, { seams, decals })], { type: "image/svg+xml" }), `${name}.svg`);
         setDone("SVG berlapis (potong, gunung, lembah, perforasi, score, nomor) siap.");
       } else {
-        download(await exportPng(net, Number(dpi), seams, free, decals), `${name}-${dpi}dpi.png`);
+        download(await exportPng(net, Number(dpi), seams, decals), `${name}-${dpi}dpi.png`);
         setDone(`PNG ${dpi} dpi siap.`);
       }
     } catch (e) {
@@ -190,16 +187,7 @@ export function ExportView() {
             )}
             <Switch label="Nomor pasangan tepi" description="Membantu mencocokkan tepi saat merakit (1↔1, 2↔2)." checked={seams} onChange={setSeams} />
             {format === "pdf" && <p className="text-xs text-pretty text-stone-500">Halaman sampul berisi kotak kalibrasi 10 cm, legenda garis, peta halaman, daftar bahan, dan langkah singkat.</p>}
-            {free && format !== "svg" && <p className="text-xs text-pretty text-stone-500">Paket Gratis menambahkan watermark kecil di tepi halaman.</p>}
-            {svgLocked && (
-              <p id="svg-locked" className="rounded-lg bg-amber-50 p-3 text-sm text-pretty text-amber-900">
-                Ekspor SVG berlapis tersedia di paket Pro.{" "}
-                <Link href="/harga" className="font-semibold underline underline-offset-2">
-                  Lihat paket
-                </Link>
-              </p>
-            )}
-            <Button variant="primary" size="lg" onClick={run} disabled={busy || svgLocked} aria-describedby={svgLocked ? "svg-locked" : error ? "export-err" : undefined} aria-busy={busy}>
+            <Button variant="primary" size="lg" onClick={run} disabled={busy} aria-describedby={error ? "export-err" : undefined} aria-busy={busy}>
               {busy ? <Loader2 className="animate-spin" aria-hidden /> : <Download aria-hidden />}
               {busy ? "Menyiapkan berkas…" : `Unduh ${format.toUpperCase()}`}
             </Button>

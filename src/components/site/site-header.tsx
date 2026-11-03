@@ -11,7 +11,6 @@ import { Logo } from "./logo";
 const NAV = [
   { href: "/template", label: "Template" },
   { href: "/komunitas", label: "Komunitas" },
-  { href: "/harga", label: "Harga" },
   { href: "/dashboard", label: "Proyek saya" },
 ];
 
@@ -83,7 +82,7 @@ export function SiteFooter() {
         {[
           { h: "Buat", l: [["/template", "Galeri template"], ["/studio?template=controller-ps4", "Studio editor"], ["/template?kategori=hobi", "Template hobi"]] },
           { h: "Belajar", l: [["/panduan?template=roket-3d", "Panduan rakit"], ["/komunitas", "Karya komunitas"], ["/template?kategori=kendaraan", "Kendaraan 3D"]] },
-          { h: "Lipatin", l: [["/harga", "Paket & harga"], ["/dashboard", "Proyek saya"]] },
+          { h: "Lipatin", l: [["/dashboard", "Proyek saya"], ["https://github.com/farishiddiq/lipatin", "Kode sumber"]] },
         ].map((c) => (
           <div key={c.h} className="flex flex-col gap-2 text-sm">
             <h2 className="font-bold text-stone-900">{c.h}</h2>

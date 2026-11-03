@@ -118,7 +118,7 @@ const EXTRAS = [
   { icon: History, label: "Riwayat versi" },
   { icon: Link2, label: "Link publik" },
   { icon: ShieldCheck, label: "Mode anak" },
-  { icon: Wallet, label: "Gratis untuk mulai" },
+  { icon: Wallet, label: "100% gratis" },
 ];
 
 const TONE = {
@@ -187,7 +187,7 @@ export function Features() {
   );
 }
 
-/** Editor desain bawaan (Pro · Segera): terkunci, dengan hover dan disabled yang rapi. */
+/** Editor desain bawaan (segera hadir): terkunci, dengan hover dan disabled yang rapi. */
 export function ProLockedCard() {
   return (
     <div className="group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl bg-white p-6 shadow-soft" aria-disabled="true">
@@ -195,7 +195,7 @@ export function ProLockedCard() {
         <span className="flex size-10 items-center justify-center rounded-xl bg-stone-200 text-stone-600 transition-transform duration-500 ease-[var(--ease-oil)] group-hover:rotate-12">
           <Lock className="size-5" aria-hidden />
         </span>
-        <span className="rounded-full bg-orange-100 px-2 py-1 text-xs font-bold text-orange-800">Pro · Segera</span>
+        <span className="rounded-full bg-orange-100 px-2 py-1 text-xs font-bold text-orange-800">Segera</span>
       </div>
       <div className="flex items-center justify-center gap-4 text-stone-300 transition-colors duration-500 group-hover:text-stone-400" aria-hidden>
         <PenTool className="size-8" />
@@ -229,7 +229,7 @@ export function Proof() {
     { n: TEMPLATES.length, s: "", l: "model 3D" },
     { n: CATEGORIES.length, s: "", l: "kategori hobi & cita-cita" },
     { n: 10, s: " cm", l: "kalibrasi cetak" },
-    { n: 0, p: "Rp", s: "", l: "untuk mulai" },
+    { n: 0, p: "Rp", s: "", l: "gratis selamanya" },
   ];
   return (
     <div className="relative bg-sage">
@@ -289,12 +289,12 @@ export function Proof() {
 const SHARE = [
   {
     label: "Bagikan ke WhatsApp",
-    href: "https://wa.me/?text=Lipatin%20%E2%80%94%20pola%20kardus%202D%20%E2%86%94%203D%20https%3A%2F%2Flipatin.id",
+    href: "https://wa.me/?text=Lipatin%20%E2%80%94%20pola%20kardus%202D%20%E2%86%94%203D%20https%3A%2F%2Ffarishiddiq.github.io%2Flipatin%2F",
     d: "M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.2c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6-.3.4c-.1.1-.2.3 0 .5.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.3.1.4.1.6-.1l.8-1c.2-.2.4-.2.6-.1l1.9.9c.3.1.4.2.5.3.1.2.1.7-.1 1.3z",
   },
-  { label: "Bagikan ke X", href: "https://twitter.com/intent/tweet?text=Lipatin%20%E2%80%94%20pola%20kardus%202D%20%E2%86%94%203D&url=https%3A%2F%2Flipatin.id", d: "M17.8 3h3.1l-6.8 7.7 8 10.3h-6.3l-4.9-6.4L5.3 21H2.2l7.3-8.3L1.8 3h6.4l4.4 5.9zm-1.1 16.2h1.7L7.4 4.7H5.6z" },
-  { label: "Bagikan ke Facebook", href: "https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Flipatin.id", d: "M14 8V6c0-.9.6-1.1 1-1.1h2.5V1H14c-3.6 0-4.4 2.7-4.4 4.4V8H7v4h2.6v11H14V12h3.1l.4-4z" },
-  { label: "Bagikan ke Telegram", href: "https://t.me/share/url?url=https%3A%2F%2Flipatin.id&text=Lipatin", d: "M21.9 4.3 18.6 20c-.2 1.1-.9 1.4-1.8.9l-5-3.7-2.4 2.3c-.3.3-.5.5-1 .5l.4-5.1 9.3-8.4c.4-.4-.1-.6-.6-.2L5.9 13.5 1 12c-1.1-.3-1.1-1.1.2-1.6L20.5 3c.9-.3 1.7.2 1.4 1.3z" },
+  { label: "Bagikan ke X", href: "https://twitter.com/intent/tweet?text=Lipatin%20%E2%80%94%20pola%20kardus%202D%20%E2%86%94%203D&url=https%3A%2F%2Ffarishiddiq.github.io%2Flipatin%2F", d: "M17.8 3h3.1l-6.8 7.7 8 10.3h-6.3l-4.9-6.4L5.3 21H2.2l7.3-8.3L1.8 3h6.4l4.4 5.9zm-1.1 16.2h1.7L7.4 4.7H5.6z" },
+  { label: "Bagikan ke Facebook", href: "https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Ffarishiddiq.github.io%2Flipatin%2F", d: "M14 8V6c0-.9.6-1.1 1-1.1h2.5V1H14c-3.6 0-4.4 2.7-4.4 4.4V8H7v4h2.6v11H14V12h3.1l.4-4z" },
+  { label: "Bagikan ke Telegram", href: "https://t.me/share/url?url=https%3A%2F%2Ffarishiddiq.github.io%2Flipatin%2F&text=Lipatin", d: "M21.9 4.3 18.6 20c-.2 1.1-.9 1.4-1.8.9l-5-3.7-2.4 2.3c-.3.3-.5.5-1 .5l.4-5.1 9.3-8.4c.4-.4-.1-.6-.6-.2L5.9 13.5 1 12c-1.1-.3-1.1-1.1.2-1.6L20.5 3c.9-.3 1.7.2 1.4 1.3z" },
 ];
 
 export function Closing() {

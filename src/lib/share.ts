@@ -19,6 +19,7 @@ export function decodeShare(s: string): { d: ProjectData; a?: string } | null {
 }
 
 export function shareUrl(d: ProjectData) {
-  const origin = typeof window !== "undefined" ? window.location.origin : "https://lipatin.id";
-  return `${origin}/lihat#${encodeShare(d)}`;
+  // GitHub Pages menyajikan situs di bawah basePath (/lipatin), jadi sertakan saat membuat tautan
+  const origin = typeof window !== "undefined" ? window.location.origin : "https://farishiddiq.github.io";
+  return `${origin}${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/lihat/#${encodeShare(d)}`;
 }

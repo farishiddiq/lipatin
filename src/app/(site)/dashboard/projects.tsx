@@ -9,7 +9,7 @@ import { NetSvg } from "@/components/net/net-svg";
 import { Button, buttonClass } from "@/components/ui/button";
 import { ConfirmDialog, Dialog } from "@/components/ui/dialog";
 import { resolveProject, templateOf, type Project } from "@/lib/project";
-import { FREE_PROJECT_LIMIT, projectData, useProjects } from "@/lib/store/projects";
+import { projectData, useProjects } from "@/lib/store/projects";
 import { cn } from "@/lib/utils";
 
 function ago(t: number) {
@@ -23,7 +23,6 @@ function ago(t: number) {
 export function Projects() {
   const [mounted, setMounted] = useState(false);
   const projects = useProjects((s) => s.projects);
-  const plan = useProjects((s) => s.plan);
   const [folder, setFolder] = useState<string | null>(null);
   const [q, setQ] = useState("");
   const [toDelete, setToDelete] = useState<Project | null>(null);
@@ -49,22 +48,9 @@ export function Projects() {
         </Link>
       </div>
 
-      <section aria-label="Status paket" className="mt-6 flex flex-wrap items-center gap-4 rounded-2xl border border-stone-200 bg-white p-4">
-        <div className="flex min-w-48 flex-1 flex-col gap-1.5">
-          <p className="text-sm font-bold">
-            Paket {plan === "pro" ? "Pro" : "Gratis"}
-            <span className="ml-2 font-normal text-stone-500 tabular-nums">{plan === "pro" ? `${mounted ? used : 0} proyek` : `${mounted ? used : 0} dari ${FREE_PROJECT_LIMIT} proyek`}</span>
-          </p>
-          {plan === "free" && (
-            <div className="h-2 overflow-hidden rounded-full bg-stone-200" role="meter" aria-label="Kuota proyek" aria-valuenow={mounted ? used : 0} aria-valuemin={0} aria-valuemax={FREE_PROJECT_LIMIT}>
-              <div className="h-full origin-left rounded-full bg-orange-500" style={{ transform: `scaleX(${Math.min(1, (mounted ? used : 0) / FREE_PROJECT_LIMIT)})` }} />
-            </div>
-          )}
-        </div>
-        <Link href="/harga" className={buttonClass("outline", "sm")}>
-          {plan === "pro" ? "Kelola paket" : "Tingkatkan ke Pro"}
-        </Link>
-      </section>
+      <p className="mt-6 text-sm text-stone-600">
+        <span className="font-bold text-ink tabular-nums">{mounted ? used : 0}</span> proyek · gratis tanpa batas
+      </p>
 
       {!mounted ? (
         <ul className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" aria-busy="true">
