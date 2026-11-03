@@ -5,6 +5,14 @@ lipatannya dalam 3D, lalu cetak polanya 1:1 dari browser. Tanpa daftar akun, tan
 
 **Buka:** https://farishiddiq.github.io/lipatin/
 
+## Screenshots
+
+![Studio Lipatin: pola potong controller PS4 di kiri, hasil rakitan 3D di kanan](promo/assets/studio.png)
+
+![Galeri template kategori Budaya: Rumah Gadang, Joglo, Honai, dan Tongkonan dalam 3D](promo/assets/galeri.png)
+
+![Halaman depan Lipatin dengan judul "Lipat ide jadi kardus." dan kotak kardus 3D](promo/assets/landing.png)
+
 ## Fitur
 
 - **149 model 3D** dalam 21 kategori:
